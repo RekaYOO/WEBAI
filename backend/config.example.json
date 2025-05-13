@@ -1,0 +1,18 @@
+{
+  "openai": {
+    "api_key": "your-api-key-here",
+    "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  },
+  "models": {
+    "available": ["qwen-plus", "qwen-turbo", "qwen-max", "qwq-32b"],
+    "default": "qwen-plus",
+    "thinking_models": ["qwq-32b"]
+  },
+  "system": {
+    "content": "你是列卡，一个AI助手，请根据用户的问题给出回答"
+  },
+  "data": {
+    "dir": "data",
+    "conversations_file": "conversations.json"
+  }
+} 
