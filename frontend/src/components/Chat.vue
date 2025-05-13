@@ -30,7 +30,14 @@
           </label>
           <span class="toggle-label">流式输出</span>
         </div>
-        <div class="streaming-toggle">
+        <div v-if="isThinkingModel" class="streaming-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" v-model="isDeepThinkingEnabled">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">深度思考</span>
+        </div>
+        <div v-if="isSearchModel" class="streaming-toggle">
           <label class="toggle-switch">
             <input type="checkbox" v-model="isWebSearchEnabled">
             <span class="toggle-slider"></span>
@@ -71,12 +78,40 @@
             </div>
           </div>
           <div class="menu-section">
-            <h3>选择模型</h3>
-            <select v-model="selectedModel" :disabled="isLoading" class="model-select">
-              <option v-for="model in availableModels" :key="model" :value="model">
-                {{ model }}
-              </option>
-            </select>
+            <h3>模型设置</h3>
+            <div class="menu-controls">
+              <div class="menu-model-select">
+                <label>选择模型</label>
+                <select v-model="selectedModel" :disabled="isLoading" class="model-select">
+                  <option v-for="model in availableModels" :key="model" :value="model">
+                    {{ model }}
+                  </option>
+                </select>
+              </div>
+              <div class="menu-toggles">
+                <div class="menu-toggle-item">
+                  <label class="toggle-switch">
+                    <input type="checkbox" v-model="isStreamingEnabled">
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">流式输出</span>
+                </div>
+                <div v-if="isThinkingModel" class="menu-toggle-item">
+                  <label class="toggle-switch">
+                    <input type="checkbox" v-model="isDeepThinkingEnabled">
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">深度思考</span>
+                </div>
+                <div v-if="isSearchModel" class="menu-toggle-item">
+                  <label class="toggle-switch">
+                    <input type="checkbox" v-model="isWebSearchEnabled">
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">联网搜索</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -158,10 +193,12 @@ export default {
       currentConversationId: null,
       availableModels: [],
       thinkingModels: [],
+      searchModels: [],
       selectedModel: 'gpt-3.5-turbo',
       showMobileMenu: false,
       isMobile: window.innerWidth <= 768,
       isStreamingEnabled: true,
+      isDeepThinkingEnabled: true,
       isWebSearchEnabled: false,
       currentStreamingMessage: '',
       shouldAutoScroll: true,
@@ -187,6 +224,9 @@ export default {
     },
     isThinkingModel() {
       return this.thinkingModels.includes(this.selectedModel);
+    },
+    isSearchModel() {
+      return this.searchModels.includes(this.selectedModel);
     }
   },
   mounted() {
@@ -307,6 +347,13 @@ export default {
           this.thinkingModels = await thinkingModelsResponse.json();
           console.log('加载到的思考模型:', this.thinkingModels);
         }
+
+        // 获取搜索模型列表
+        const searchModelsResponse = await fetch(`${this.apiUrl}/search_models`);
+        if (searchModelsResponse.ok) {
+          this.searchModels = await searchModelsResponse.json();
+          console.log('加载到的搜索模型:', this.searchModels);
+        }
         
         // 从后端获取默认模型
         const defaultModelResponse = await fetch(`${this.apiUrl}/default_model`);
@@ -332,6 +379,7 @@ export default {
         model: this.selectedModel,
         conversationId: this.currentConversationId,
         streaming: this.isStreamingEnabled,
+        deepThinking: this.isDeepThinkingEnabled,
         webSearch: this.isWebSearchEnabled
       });
       
@@ -352,6 +400,7 @@ export default {
             message,
             conversation_id: this.currentConversationId,
             model_name: this.selectedModel,
+            deep_thinking: this.isDeepThinkingEnabled,
             web_search: this.isWebSearchEnabled
           })
         });
@@ -734,7 +783,7 @@ export default {
 
 .nav-bar {
   height: 56px;
-  padding: 0 16px;
+  padding: 0 12px;
   background: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
@@ -747,7 +796,42 @@ export default {
 .nav-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.streaming-toggle.mobile {
+  margin: 0;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+}
+
+.toggle-label {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.model-select-wrapper.mobile {
+  margin: 0;
+  width: auto;
+}
+
+.model-select.mobile {
+  padding: 4px 24px 4px 8px;
+  font-size: 12px;
+  height: 28px;
+  min-width: 80px;
 }
 
 .nav-title {
@@ -825,13 +909,53 @@ export default {
 
 .menu-section {
   margin-bottom: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .menu-section h3 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.menu-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-model-select {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-model-select label {
   font-size: 14px;
   color: #666;
-  margin-bottom: 12px;
-  padding: 0 4px;
+}
+
+.menu-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-toggle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.menu-toggle-item .toggle-label {
+  font-size: 14px;
+  color: #333;
 }
 
 .menu-conversations {
@@ -1387,12 +1511,16 @@ button:disabled {
   }
 
   .nav-bar {
-    padding: 0 12px;
+    padding: 0 8px;
   }
 
   .nav-title {
     font-size: 14px;
     margin: 0 8px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .chat-messages {
@@ -1683,12 +1811,16 @@ button:disabled {
   }
 
   .nav-bar {
-    padding: 0 12px;
+    padding: 0 8px;
   }
 
   .nav-title {
     font-size: 14px;
     margin: 0 8px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .chat-messages {

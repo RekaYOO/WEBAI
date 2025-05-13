@@ -63,6 +63,9 @@ default_model = config['models']['default']
 def is_thinking_model(model_name):
     return model_name in config['models']['thinking_models']
 
+def is_search_model(model_name):
+    return model_name in config['models']['search_models']
+
 @app.route('/api/conversations', methods=['GET'])
 def get_conversations():
     return jsonify(list(conversations.values()))
@@ -113,6 +116,10 @@ def get_models():
 @app.route('/api/thinking_models', methods=['GET'])
 def get_thinking_models():
     return jsonify(config['models']['thinking_models'])  # 返回思考模型列表
+
+@app.route('/api/search_models', methods=['GET'])
+def get_search_models():
+    return jsonify(config['models']['search_models'])  # 返回搜索模型列表
 
 @app.route('/api/default_model', methods=['GET'])
 def get_default_model():
@@ -167,7 +174,7 @@ def generate_stream_response(conversation_id, messages_for_ai, model_name, deep_
         # 准备extra_body
         extra_body_text = {
             "enable_thinking": (is_thinking_model(model_name) and deep_thinking),
-            "enable_search": web_search  # 根据前端传来的参数设置
+            "enable_search": (is_search_model(model_name) and web_search)  # 只有搜索模型才启用搜索功能
         }
         print(f"Debug - Model: {model_name}, Deep Thinking: {deep_thinking}, Web Search: {web_search}, Extra Body: {extra_body_text}")
 

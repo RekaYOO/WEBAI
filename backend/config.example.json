@@ -4,9 +4,10 @@
     "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1"
   },
   "models": {
-    "available": ["qwen-plus", "qwen-turbo", "qwen-max", "qwq-32b"],
+    "available": ["qwen-plus", "qwen-turbo", "qwen-max", "qwq-32b", "qwen3-1.7b"],
     "default": "qwen-plus",
-    "thinking_models": ["qwq-32b"]
+    "thinking_models": ["qwq-32b","qwen3-1.7b"],
+    "search_models": ["qwen-plus", "qwen-turbo", "qwen-max", "qwq-32b", "qwen3-1.7b"]
   },
   "system": {
     "content": "你是列卡，一个AI助手，请根据用户的问题给出回答"

@@ -22,10 +22,7 @@ venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 ```
 
-3. 配置环境变量：
-- 创建 `.env` 文件
-- 填写必要的环境变量：
-  - DASHSCOPE_API_KEY：阿里云通义千问 API Key
+3.配置api
 
 4. 运行服务：
 ```bash
