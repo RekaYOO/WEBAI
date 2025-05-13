@@ -30,6 +30,13 @@
           </label>
           <span class="toggle-label">流式输出</span>
         </div>
+        <div class="streaming-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" v-model="isWebSearchEnabled">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">联网搜索</span>
+        </div>
       </div>
     </div>
     <div class="chat-main">
@@ -150,10 +157,12 @@ export default {
       conversations: [],
       currentConversationId: null,
       availableModels: [],
+      thinkingModels: [],
       selectedModel: 'gpt-3.5-turbo',
       showMobileMenu: false,
       isMobile: window.innerWidth <= 768,
       isStreamingEnabled: true,
+      isWebSearchEnabled: false,
       currentStreamingMessage: '',
       shouldAutoScroll: true,
     }
@@ -175,6 +184,9 @@ export default {
     getCurrentConversationTitle() {
       const conversation = this.conversations.find(c => c.id === this.currentConversationId);
       return conversation ? conversation.title : '';
+    },
+    isThinkingModel() {
+      return this.thinkingModels.includes(this.selectedModel);
     }
   },
   mounted() {
@@ -289,6 +301,13 @@ export default {
         this.availableModels = await response.json();
         console.log('加载到的可用模型:', this.availableModels);
         
+        // 获取思考模型列表
+        const thinkingModelsResponse = await fetch(`${this.apiUrl}/thinking_models`);
+        if (thinkingModelsResponse.ok) {
+          this.thinkingModels = await thinkingModelsResponse.json();
+          console.log('加载到的思考模型:', this.thinkingModels);
+        }
+        
         // 从后端获取默认模型
         const defaultModelResponse = await fetch(`${this.apiUrl}/default_model`);
         if (defaultModelResponse.ok) {
@@ -312,7 +331,8 @@ export default {
         message,
         model: this.selectedModel,
         conversationId: this.currentConversationId,
-        streaming: this.isStreamingEnabled
+        streaming: this.isStreamingEnabled,
+        webSearch: this.isWebSearchEnabled
       });
       
       // 添加用户消息
@@ -331,7 +351,8 @@ export default {
           body: JSON.stringify({
             message,
             conversation_id: this.currentConversationId,
-            model_name: this.selectedModel
+            model_name: this.selectedModel,
+            web_search: this.isWebSearchEnabled
           })
         });
 
@@ -412,11 +433,18 @@ export default {
                       messages: data.messages
                     });
                     // 更新对话列表
-                    this.conversations = this.conversations.map(conv => 
-                      conv.id === this.currentConversationId 
-                        ? { ...conv, messages: data.messages }
-                        : conv
-                    );
+                    this.conversations = this.conversations.map(conv => {
+                      if (conv.id === this.currentConversationId) {
+                        // 获取最新的对话数据
+                        const updatedConv = { ...conv, messages: data.messages };
+                        // 如果后端返回了新的标题，使用新标题
+                        if (data.title) {
+                          updatedConv.title = data.title;
+                        }
+                        return updatedConv;
+                      }
+                      return conv;
+                    });
                     break;
                   case 'error':
                     console.error('流式输出错误:', data.error);
