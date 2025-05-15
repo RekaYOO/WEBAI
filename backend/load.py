@@ -18,6 +18,7 @@ class GradeLoader:
     """成绩加载和分析类"""
     
     def __init__(self, config_path: str, data_dir: str):
+        print("初始化成绩加载器")
         """
         初始化成绩加载器
         
