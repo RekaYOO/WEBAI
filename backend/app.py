@@ -157,6 +157,9 @@ class AIClient:
     def is_search_model(self, model_name: str) -> bool:
         return model_name in self.config.search_models
 
+    def is_tool_model(self, model_name: str) -> bool:
+        return model_name in self.config.tool_models
+
     def is_qwq_model(self, model_name: str) -> bool:
         return model_name == "qwq-32b"
 
@@ -383,7 +386,7 @@ class ChatHandler:
             logger.info(f"模型配置: {model_name}, 深度思考: {deep_thinking}, 网络搜索: {web_search}")
 
             # 根据模型类型决定是否使用工具调用
-            use_tools = not self.ai_client.is_qwq_model(model_name)
+            use_tools = self.ai_client.is_tool_model(model_name)
             logger.info(f"是否使用工具调用: {use_tools}")
 
             # 第一次调用AI

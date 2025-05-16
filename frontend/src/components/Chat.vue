@@ -923,6 +923,33 @@ export default {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.menu-conversations {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-conversation-item {
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.menu-conversation-item:hover {
+  background: #e9ecef;
+}
+
+.menu-conversation-item.active {
+  background: #e3f2fd;
+  border-left: 3px solid #007AFF;
+}
+
 .menu-controls {
   display: flex;
   flex-direction: column;
@@ -958,30 +985,75 @@ export default {
   color: #333;
 }
 
-.menu-conversations {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+/* 深色模式下的移动端菜单样式 */
+@media (prefers-color-scheme: dark) {
+  .mobile-menu {
+    background: rgba(0, 0, 0, 0.7);
+  }
 
-.menu-conversation-item {
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+  .menu-content {
+    background: #1a1a1a;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+  }
 
-.menu-conversation-item:hover {
-  background: #e9ecef;
-}
+  .menu-section {
+    background: #2d2d2d;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
 
-.menu-conversation-item.active {
-  background: #e3f2fd;
-  border-left: 3px solid #007AFF;
+  .menu-section h3 {
+    color: #e9ecef;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .menu-conversation-item {
+    background: #3d3d3d;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .menu-conversation-item:hover {
+    background: #4d4d4d;
+  }
+
+  .menu-conversation-item.active {
+    background: #1e3a5f;
+    border-left-color: #007AFF;
+  }
+
+  .menu-model-select label {
+    color: #adb5bd;
+  }
+
+  .menu-toggle-item .toggle-label {
+    color: #e9ecef;
+  }
+
+  .menu-conversation-item .conversation-title {
+    color: #e9ecef;
+  }
+
+  .menu-conversation-item .delete-btn {
+    color: #ff6b6b;
+  }
+
+  .menu-conversation-item .delete-btn:hover {
+    background: rgba(255, 107, 107, 0.1);
+  }
+
+  .menu-model-select select {
+    background: #3d3d3d;
+    color: #e9ecef;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .menu-model-select select:hover {
+    border-color: #007AFF;
+  }
+
+  .menu-model-select select:focus {
+    border-color: #007AFF;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  }
 }
 
 .model-selector {
@@ -1035,6 +1107,155 @@ export default {
   opacity: 0.7;
   cursor: not-allowed;
   background: #f8f9fa;
+}
+
+/* 深色模式下的模型选择器样式 */
+@media (prefers-color-scheme: dark) {
+  .model-selector {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .model-select {
+    background: #2d2d2d;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .model-select:hover {
+    background: #3d3d3d;
+    border-color: #007AFF;
+  }
+
+  .model-select:focus {
+    border-color: #007AFF;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  }
+
+  .model-select:disabled {
+    background: #2d2d2d;
+    opacity: 0.5;
+  }
+
+  .model-select-icon {
+    color: #ffffff;
+  }
+
+  /* 移动端模型选择器样式 */
+  .mobile-model-select {
+    background: #2d2d2d;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .mobile-model-select:hover {
+    background: #3d3d3d;
+    border-color: #007AFF;
+  }
+
+  .mobile-model-select:focus {
+    border-color: #007AFF;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  }
+
+  .mobile-model-select:disabled {
+    background: #2d2d2d;
+    opacity: 0.5;
+  }
+
+  /* 移动端菜单中的模型选择器 */
+  .menu-model-select select {
+    background: #2d2d2d;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .menu-model-select select:hover {
+    background: #3d3d3d;
+    border-color: #007AFF;
+  }
+
+  .menu-model-select select:focus {
+    border-color: #007AFF;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  }
+
+  .menu-model-select select:disabled {
+    background: #2d2d2d;
+    opacity: 0.5;
+  }
+
+  .menu-model-select label {
+    color: #ffffff;
+  }
+
+  /* 深色模式下的菜单图标和文字 */
+  .menu-icon {
+    color: #ffffff;
+  }
+
+  .plus-icon {
+    color: #ffffff;
+  }
+
+  .menu-btn, .new-chat-btn {
+    color: #ffffff;
+  }
+
+  .menu-btn:hover, .new-chat-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-title {
+    color: #ffffff;
+  }
+
+  .toggle-icon {
+    color: #ffffff;
+  }
+
+  .reasoning-header span {
+    color: #ffffff;
+  }
+
+  .toggle-label {
+    color: #ffffff;
+  }
+
+  /* 深色模式下的开关样式 */
+  .toggle-slider {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .toggle-slider:before {
+    background-color: #ffffff;
+  }
+
+  input:checked + .toggle-slider {
+    background-color: #007AFF;
+  }
+
+  /* 深色模式下的删除按钮 */
+  .delete-btn {
+    color: #ff6b6b;
+  }
+
+  .delete-btn:hover {
+    background: rgba(255, 107, 107, 0.1);
+  }
+
+  /* 深色模式下的复制按钮 */
+  .copy-btn {
+    color: #ffffff;
+  }
+
+  .copy-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .copy-btn.copied {
+    color: #4cd964;
+    background: rgba(76, 217, 100, 0.1);
+  }
 }
 
 .chat-messages {
@@ -1200,7 +1421,7 @@ export default {
   }
 
   .toggle-icon {
-    color: #adb5bd;
+    color: #ffffff;
   }
 
   .reasoning-content {
@@ -1796,7 +2017,7 @@ button:disabled {
   .mobile-model-select {
     background: #2d2d2d;
     color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
   .mobile-model-select:disabled {
