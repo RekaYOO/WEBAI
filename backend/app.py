@@ -191,7 +191,6 @@ class GradeAnalyzer:
 
     def analyze_gpa(self, use_cache: bool = True) -> Tuple[bool, Union[List[Dict], str]]:
         """分析绩点数据"""
-        logger.info("分析绩点数据")
         if use_cache:
             success, result = self.loader.read_analyzed_grades()
             if success:
@@ -206,7 +205,6 @@ class GradeAnalyzer:
 
     def analyze_plan(self, use_cache: bool = True) -> Tuple[bool, Union[str, str]]:
         """分析培养计划"""
-        logger.info("分析培养计划")
         if use_cache:
             success, result = self.loader.read_analyzed_plan()
             if success:
@@ -221,7 +219,6 @@ class GradeAnalyzer:
 
     def analyze_plan_completion(self, use_cache: bool = True) -> Tuple[bool, Union[str, str]]:
         """分析培养计划完成情况"""
-        logger.info("分析培养计划完成情况")
         if use_cache:
             success, result = self.loader.read_analyzed_completion()
             if success:
@@ -283,7 +280,7 @@ class ChatHandler:
                 "type": "function",
                 "function": {
                     "name": "analyze_plan_completion",
-                    "description": "分析学生培养计划的完成情况，了解已修课程和未修课程。",
+                    "description": "分析学生培养计划的完成情况（学业预警），了解已修课程和未修课程。",
                     "parameters": {
                         "type": "object",
                         "properties": {

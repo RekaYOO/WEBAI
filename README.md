@@ -1,72 +1,100 @@
-# WEBAI
+# WEBAI - AI 智能对话与成绩分析系统
 
 基于 Flask + Vue3 的 AI 对话应用。
 
+## 启动说明
 
-## 部署方法
+### 环境要求
+- Python 3.8+
+- Node.js 16+
+- 有效的 AI API Key
+- 东北大学统一身份认证账号（用于成绩分析功能）
 
-### 后端部署
+### 完整启动步骤
 
-1. 安装 Python 依赖
+1. 克隆项目
 ```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate     # Windows
-pip install -r requirements.txt
+git clone <repository_url>
+cd WEBAI
 ```
 
-2. 配置
-- 复制 `config.example.json` 为 `config.json`
-- 填写必要的 API Key
-
-### 前端部署
-
-1. 安装 Node.js 依赖
+2. 后端配置
 ```bash
-cd frontend
+# 进入后端目录
+cd backend
+
+# 创建并激活虚拟环境
+python -m venv venv
+venv\Scripts\activate     # Windows
+source venv/bin/activate  # Linux/Mac
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 配置 API Key
+# 复制 config.example.json 为 config.json 并填写必要的 API Key
+cp config.example.json config.json
+# 编辑 config.json 文件，填入你的 API Key
+
+# 配置成绩分析功能
+# 复制 loadgrade/config.example.json 为 loadgrade/config.json 并填写账号信息
+cp loadgrade/config.example.json loadgrade/config.json
+# 编辑 loadgrade/config.json 文件，填入你的统一身份认证账号信息
+```
+
+3. 前端配置
+```bash
+# 进入前端目录
+cd ../frontend
+
+# 安装依赖
 npm install
 ```
 
-## 启动方法
+4. 启动服务
 
-### 开发环境
-
-1. 启动后端服务
+开发环境：
 ```bash
+# 终端 1：启动后端服务
 cd backend
+venv\Scripts\activate     # Windows
 python app.py
-```
 
-2. 启动前端服务
-```bash
+# 终端 2：启动前端服务
 cd frontend
 npm run dev
 ```
 
-### 生产环境
+生产环境：
+需要单独配置一下静态资源
 
-1. 构建前端
-```bash
-cd frontend
-npm run build
-```
+### 访问应用
 
-2. 启动后端服务
-```bash
-cd backend
-flask run
-```
+- 开发环境：
+  - 前端：http://localhost:5173
+  - 后端：http://localhost:5000
 
-## 目录结构
+- 生产环境：
+  - 应用：http://localhost:5000
 
-```
-WEBAI/
-├── backend/          # Flask 后端
-│   ├── app.py       # 主应用
-│   ├── config.json  # 配置文件
-│   └── requirements.txt
-└── frontend/        # Vue3 前端
-    ├── src/         # 源代码
-    ├── public/      # 静态资源
-    └── package.json
-``` 
+### 配置文件说明
+
+1. 后端主配置文件 (`backend/config.json`)
+   - 包含 AI API Key 和系统配置
+   - 从 `config.example.json` 复制并填写
+
+2. 成绩分析配置文件 (`backend/loadgrade/config.json`)
+   - 包含统一身份认证账号信息
+   - 从 `loadgrade/config.example.json` 复制并填写
+   - 格式示例：
+     ```json
+     {
+         "user_info": {
+             "username": "your_student_id",
+             "password": "your_password"
+         },
+         "login_history": [],
+         "last_login": null
+     }
+     ```
+
