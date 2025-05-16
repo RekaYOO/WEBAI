@@ -61,6 +61,10 @@ class Config:
         return self.models_config.get('search_models', [])
 
     @property
+    def tool_models(self) -> List[str]:
+        return self.models_config.get('tool_models', [])
+
+    @property
     def system_content(self) -> str:
         return self.system_config.get('content', '')
 
