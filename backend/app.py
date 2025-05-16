@@ -157,6 +157,9 @@ class AIClient:
     def is_search_model(self, model_name: str) -> bool:
         return model_name in self.config.search_models
 
+    def is_qwq_model(self, model_name: str) -> bool:
+        return model_name == "qwq-32b"
+
     def generate_title(self, messages: List[dict]) -> Optional[str]:
         """生成对话标题"""
         try:
@@ -379,12 +382,16 @@ class ChatHandler:
             }
             logger.info(f"模型配置: {model_name}, 深度思考: {deep_thinking}, 网络搜索: {web_search}")
 
+            # 根据模型类型决定是否使用工具调用
+            use_tools = not self.ai_client.is_qwq_model(model_name)
+            logger.info(f"是否使用工具调用: {use_tools}")
+
             # 第一次调用AI
             completion = self.ai_client.client.chat.completions.create(
                 model=model_name,
                 messages=current_messages,
                 stream=True,
-                tools=self.tools_list,
+                tools=self.tools_list if use_tools else None,
                 extra_body=extra_body_text
             )
 
@@ -405,8 +412,8 @@ class ChatHandler:
                             'content': delta.reasoning_content
                         })}\n\n"
 
-                # 处理工具调用
-                if hasattr(delta, "tool_calls") and delta.tool_calls:
+                # 处理工具调用（仅当不使用qwq模型时）
+                if use_tools and hasattr(delta, "tool_calls") and delta.tool_calls:
                     tool_call = delta.tool_calls[0]
                     logger.info(f"收到工具调用: {tool_call}")
                     
@@ -444,8 +451,8 @@ class ChatHandler:
                         'content': delta.content
                     })}\n\n"
 
-            # 处理工具调用
-            if current_tool_call and current_tool_call["name"]:
+            # 处理工具调用（仅当不使用qwq模型时）
+            if use_tools and current_tool_call and current_tool_call["name"]:
                 try:
                     logger.info("执行工具调用")
                     arguments = json.loads(tool_call_arguments)
@@ -471,7 +478,7 @@ class ChatHandler:
                         model=model_name,
                         messages=current_messages,
                         stream=True,
-                        tools=self.tools_list,
+                        tools=self.tools_list if use_tools else None,
                         extra_body=extra_body_text
                     )
 
