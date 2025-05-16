@@ -1,6 +1,6 @@
-# WEBAI - AI 智能对话与成绩分析系统
+# WEBAI - 结合 NEU 系统的 AI 应用
 
-基于 Flask + Vue3 的 AI 对话应用。
+基于Flask + Vue3
 
 ## 启动说明
 
