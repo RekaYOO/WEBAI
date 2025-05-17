@@ -170,7 +170,7 @@ class AIClient:
     def generate_title(self, messages: List[dict]) -> Optional[str]:
         """生成对话标题"""
         try:
-            prompt = "请根据以下对话内容，生成一个简短的标题（不超过15个字）：\n\n"
+            prompt = "对话内容：\n\n"
             for msg in messages:
                 role = "用户" if msg.get('isUser', True) else "AI"
                 prompt += f"{role}: {msg['content']}\n"
@@ -178,7 +178,7 @@ class AIClient:
             completion = self.client.chat.completions.create(
                 model=self.config.default_model,
                 messages=[
-                    {'role': 'system', 'content': '你是一个标题生成助手，请根据对话内容生成简短的标题，由两个或三个词语组成，能够显而易见对话的主题'},
+                    {'role': 'system', 'content': '你是一个标题生成助手，请根据对话内容生成简短的纯文本，由两个或三个词语组成，能够显而易见对话的主题'},
                     {'role': 'user', 'content': prompt}
                 ],
                 stream=False
@@ -334,7 +334,7 @@ class ChatHandler:
         # 添加分析提示
         messages.append({
             "role": "system",
-            "content": "请分析上述工具调用返回的数据，并给出详细的分析结果。如果是培养计划数据，请总结课程安排和要求；如果是成绩数据，请分析成绩表现；如果是完成情况，请分析完成进度。"
+            "content": "请结合上述工具调用返回的数据，并解决用户的需求。"
         })
 
         return messages, content
