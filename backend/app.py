@@ -400,7 +400,7 @@ class ChatHandler:
 
             # 根据模型类型和深度思考状态决定是否使用工具调用
             use_tools = self.ai_client.is_tool_model(model_name) and not (self.ai_client.is_thinking_model(model_name) and deep_thinking)
-            logger.info(f"是否使用工具调用: {use_tools}")
+            logger.info(f"工具调用功能状态: {use_tools} (模型支持工具调用: {self.ai_client.is_tool_model(model_name)}, 深度思考状态: {self.ai_client.is_thinking_model(model_name) and deep_thinking})")
 
             # 第一次调用AI
             completion = self.ai_client.client.chat.completions.create(
@@ -431,7 +431,7 @@ class ChatHandler:
                 # 处理工具调用
                 if use_tools and hasattr(delta, "tool_calls") and delta.tool_calls:
                     tool_call = delta.tool_calls[0]
-                    logger.info(f"收到工具调用: {tool_call}")
+                    logger.info(f"AI决定调用工具: {tool_call}")
                     
                     if hasattr(tool_call, "function") and tool_call.function:
                         if hasattr(tool_call, "id") and tool_call.id:
@@ -461,7 +461,6 @@ class ChatHandler:
                         })}\n\n"
                     
                     full_content += delta.content
-                    logger.info(f"收到回答内容: {delta.content}")
                     yield f"data: {json.dumps({
                         'type': 'answer',
                         'content': delta.content
@@ -528,7 +527,6 @@ class ChatHandler:
                                 })}\n\n"
                             
                             full_content += delta.content
-                            logger.info(f"收到回答内容: {delta.content}")
                             yield f"data: {json.dumps({
                                 'type': 'answer',
                                 'content': delta.content
