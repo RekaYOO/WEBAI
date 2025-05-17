@@ -387,10 +387,19 @@ class ChatHandler:
                 "enable_thinking": (self.ai_client.is_thinking_model(model_name) and deep_thinking),
                 "enable_search": (self.ai_client.is_search_model(model_name) and web_search)
             }
-            logger.info(f"模型配置: {model_name}, 深度思考: {deep_thinking}, 网络搜索: {web_search}")
 
-            # 根据模型类型决定是否使用工具调用
-            use_tools = self.ai_client.is_tool_model(model_name)
+            # 如果启用了联网搜索，添加搜索选项
+            if extra_body_text["enable_search"]:
+                extra_body_text["search_options"] = {
+                    "forced_search": True,  # 强制开启搜索
+                    "search_strategy": "standard"  # 标准搜索策略，搜索5条信息
+                }
+
+            logger.info(f"模型配置: {model_name}, 深度思考: {deep_thinking}, 网络搜索: {web_search}")
+            logger.info(f"搜索配置: {extra_body_text.get('search_options', '未启用')}")
+
+            # 根据模型类型和深度思考状态决定是否使用工具调用
+            use_tools = self.ai_client.is_tool_model(model_name) and not (self.ai_client.is_thinking_model(model_name) and deep_thinking)
             logger.info(f"是否使用工具调用: {use_tools}")
 
             # 第一次调用AI
@@ -419,7 +428,7 @@ class ChatHandler:
                             'content': delta.reasoning_content
                         })}\n\n"
 
-                # 处理工具调用（仅当不使用qwq模型时）
+                # 处理工具调用
                 if use_tools and hasattr(delta, "tool_calls") and delta.tool_calls:
                     tool_call = delta.tool_calls[0]
                     logger.info(f"收到工具调用: {tool_call}")
@@ -458,7 +467,7 @@ class ChatHandler:
                         'content': delta.content
                     })}\n\n"
 
-            # 处理工具调用（仅当不使用qwq模型时）
+            # 处理工具调用
             if use_tools and current_tool_call and current_tool_call["name"]:
                 try:
                     logger.info("执行工具调用")
