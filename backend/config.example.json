@@ -1,16 +1,17 @@
 {
   "openai": {
-    "api_key": "your-api-key-here",
+    "api_key": "key",
     "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1"
   },
   "models": {
-    "available": ["qwen-plus", "qwen-turbo", "qwen-max", "qwq-32b", "qwen3-1.7b"],
-    "default": "qwen-plus",
-    "thinking_models": ["qwq-32b","qwen3-1.7b"],
-    "search_models": ["qwen-plus", "qwen-turbo", "qwen-max", "qwq-32b", "qwen3-1.7b"]
+    "available": ["qwen-plus-latest", "qwen-turbo-latest", "qwen-max", "qwq-32b", "qwen3-1.7b", "deepseek-r1", "deepseek-v3"],
+    "default": "qwen-plus-latest",
+    "thinking_models": ["qwq-32b","qwen3-1.7b","deepseek-r1", "qwen-plus-latest", "qwen-turbo-latest"],
+    "search_models": ["qwen-plus-latest", "qwen-turbo-latest", "qwen-max"],
+    "tool_models": ["qwen-plus-latest", "qwen-turbo-latest", "qwen-max","qwen3-1.7b"]
   },
   "system": {
-    "content": "你是列卡，一个AI助手，请根据用户的问题给出回答"
+    "content": "你是列卡，一个AI助手，你可以调用工具来完成用户对学习的问题，也可以不调用工具回答用户的其他问题，请根据用户的问题给出回答"
   },
   "data": {
     "dir": "data",

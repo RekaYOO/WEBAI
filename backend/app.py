@@ -447,6 +447,7 @@ class ChatHandler:
                             logger.info(f"工具名称: {tool_call.function.name}")
                         
                         if hasattr(tool_call.function, "arguments") and tool_call.function.arguments:
+                            #BUG:这里应该是写current_tool_call["arguments"]，而不是tool_call_arguments
                             tool_call_arguments += tool_call.function.arguments
                             logger.info(f"工具参数: {tool_call_arguments}")
 
@@ -466,7 +467,7 @@ class ChatHandler:
                         'content': delta.content
                     })}\n\n"
 
-            # 处理工具调用
+            # 调用工具
             if use_tools and current_tool_call and current_tool_call["name"]:
                 try:
                     logger.info("执行工具调用")
